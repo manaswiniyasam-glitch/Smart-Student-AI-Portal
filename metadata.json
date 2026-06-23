@@ -1,0 +1,11 @@
+{
+  "name": "Smart Student AI Portal",
+  "description": "An AI-powered web portal integrating student performance prediction, skill enhancement systems, essay/speech graders, hackathons, and predictive analytics.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

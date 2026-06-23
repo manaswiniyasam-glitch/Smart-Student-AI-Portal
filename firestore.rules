@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidSession(data) {
+      return data.keys().hasAll(['id', 'userName', 'userEmail', 'topic', 'answer', 'marks', 'matchPercentage', 'correctAnswerKey', 'gaps', 'createdAt'])
+        && data.keys().size() == 10
+        && data.id is string && data.id.size() <= 128
+        && data.userName is string && data.userName.size() <= 512
+        && data.userEmail is string && data.userEmail.size() <= 512
+        && data.topic is string && data.topic.size() <= 512
+        && data.answer is string && data.answer.size() <= 20000
+        && data.marks is number && data.marks >= 0 && data.marks <= 10
+        && data.matchPercentage is number && data.matchPercentage >= 0 && data.matchPercentage <= 100
+        && data.correctAnswerKey is string && data.correctAnswerKey.size() <= 20000
+        && data.gaps is string && data.gaps.size() <= 20000
+        && data.createdAt == request.time;
+    }
+
+    // Sessions Collection matching
+    match /sessions/{sessionId} {
+      // Allow list and get for all attendees (both signed in and guests) so they are not blocked by anonymous auth restrictions
+      allow read: if true;
+      // Allow creating a completed session evaluation with robust field verification
+      allow create: if isValidId(sessionId) && isValidSession(incoming());
+      // Prevent editing or deletion of completed exam records
+      allow update, delete: if false;
+    }
+  }
+}

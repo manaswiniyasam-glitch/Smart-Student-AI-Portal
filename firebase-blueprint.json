@@ -1,0 +1,59 @@
+{
+  "entities": {
+    "EvaluationSession": {
+      "title": "EvaluationSession",
+      "description": "Represents an assessment session completed by a student on a specific topic.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique evaluation session identifier."
+        },
+        "userName": {
+          "type": "string",
+          "description": "Full name of the student who completed the assessment."
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Verified email of the student."
+        },
+        "topic": {
+          "type": "string",
+          "description": "Syllabus topic custom entered for the assessment."
+        },
+        "answer": {
+          "type": "string",
+          "description": "The exact voiceever/written transcript response evaluated."
+        },
+        "marks": {
+          "type": "number",
+          "description": "Calculated score out of 10 marks."
+        },
+        "matchPercentage": {
+          "type": "number",
+          "description": "The concept match percent index representing key alignments."
+        },
+        "correctAnswerKey": {
+          "type": "string",
+          "description": "The correct reference standard answer benchmark for evaluating the student."
+        },
+        "gaps": {
+          "type": "string",
+          "description": "Detailed gaps, mistakes, and missing core mechanics highlighted during analysis."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server time of creation."
+        }
+      },
+      "required": ["id", "userName", "userEmail", "topic", "answer", "marks", "matchPercentage", "correctAnswerKey", "gaps", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/sessions/{sessionId}": {
+      "schema": "EvaluationSession",
+      "description": "Collection of all subject expertise evaluation sessions completed by student users."
+    }
+  }
+}
